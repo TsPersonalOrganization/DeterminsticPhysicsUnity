@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Demo/Seok/Seok.unity
+  isLoaded: 1
+  isActive: 1
