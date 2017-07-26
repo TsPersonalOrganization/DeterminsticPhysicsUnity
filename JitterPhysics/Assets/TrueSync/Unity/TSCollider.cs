@@ -158,7 +158,7 @@ namespace TrueSync {
 
             if (tsMaterial != null) {
                 newBody.TSFriction = tsMaterial.friction;
-				newBody.TSRestitution = tsMaterial.restitution;
+                newBody.TSRestitution = tsMaterial.restitution;
             }
 
             newBody.IsColliderOnly = isTrigger;

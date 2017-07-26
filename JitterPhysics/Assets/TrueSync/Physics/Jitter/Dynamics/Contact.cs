@@ -635,8 +635,7 @@ namespace TrueSync.Physics3D {
 
             speculativeVelocity = FP.Zero;
 
-			FP relNormalVel = normal.x * dvx + normal.y * dvy + normal.z * dvz; //JVector.Dot(ref normal, ref dv);
-			//FP relNormalVel = 0;
+            FP relNormalVel = normal.x * dvx + normal.y * dvy + normal.z * dvz; //JVector.Dot(ref normal, ref dv);
 
             if (Penetration > settings.allowedPenetration)
             {
@@ -662,26 +661,20 @@ namespace TrueSync.Physics3D {
 
             TSVector impulse;
 
-			// Simultaneos solving and restitution is simply not possible
-			// so fake it a bit by just applying restitution impulse when there
-			// is a new contact.
-			/*if (relNormalVel < -FP.One && newContact)
+            // Simultaneos solving and restitution is simply not possible
+            // so fake it a bit by just applying restitution impulse when there
+            // is a new contact.
+            /*if (relNormalVel < -FP.One && newContact)
             {
                 restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
             }*/
 
-			if (!newContact)
+			if (!newContact || TSMath.Abs (relNormalVel *= restitution) < restitution)
 			{
 				relNormalVel = 0;
 			}
 
-			restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
-			//restitutionBias = (TSMath.Abs (-restitution * relNormalVel) + restitutionBias) * FP.Half;
-
-			//if (restitutionBias <= FP.Epsilon)
-			//{
-			//	restitutionBias = FP.Zero;
-			//}
+            restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
 
             // Speculative Contacts!
             // if the penetration is negative (which means the bodies are not already in contact, but they will
