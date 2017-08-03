@@ -72,7 +72,7 @@ namespace TrueSync.Physics3D
 
 		public PointOnPoint PointOnPointConstraint2 { get { return worldPointConstraint[1]; } }
 
-		public FP AppliedImpulse { get { return worldPointConstraint[0].AppliedImpulse + worldPointConstraint[1].AppliedImpulse; } }
+		public virtual FP AppliedImpulse { get { return worldPointConstraint[0].AppliedImpulse + worldPointConstraint[1].AppliedImpulse; } }
 
 		public FP getHingeAngle ()
 		{
