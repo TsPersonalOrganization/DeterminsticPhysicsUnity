@@ -11,7 +11,7 @@ public class NewBehaviourScript : TrueSyncBehaviour
 	public Vector3 force;
 
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
 	{
 		if (Input.GetKeyDown (KeyCode.T))
 		{
