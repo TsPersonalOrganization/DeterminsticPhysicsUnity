@@ -9,26 +9,18 @@ namespace TrueSync
 		BasicJoint3D thisJoint;
 		TSRigidBody thisBody;
 
-
 		[SerializeField]
 		TSCollider connectedBody;
 		[SerializeField]
 		Vector3 anchor;
 		[SerializeField]
 		Vector3 Axis;
-		//[SerializeField]
-		//bool useLimits = false;
 		[SerializeField]
 		LimitElements Limits;
 		[SerializeField]
-		bool useSpring;
-		[SerializeField]
-		SpringElements Spring;
-		[SerializeField]
 		FP breakForce = FP.PositiveInfinity;
+
 		TSVector TSWorldAxis;
-
-
 
 		public override void OnSyncedStart ()
 		{
@@ -39,27 +31,7 @@ namespace TrueSync
 			Vector3 worldPos = transform.TransformPoint (anchor);
 			TSVector TSworldPos = worldPos.ToTSVector ();
 
-			//Vector3 worldAxis = transform.TransformDirection (Axis);
-			//TSWorldAxis = worldAxis.ToTSVector ();
-
-
-			//if (useLimits)
-			//    thisJoint = new LimitedHingeJoint(PhysicsWorldManager.instance.GetWorld(), body1, body2, TSworldPos, TSWorldAxis, -Limits.Min, Limits.Max);
-			//else
 			thisJoint = new BasicJoint3D (PhysicsWorldManager.instance.GetWorld (), body1, body2, TSworldPos);
-
-			//charac joint = new CharacterJoint ();
-
-		}
-
-		public override void OnSyncedUpdate ()
-		{
-			//if (TSMath.Abs (thisJoint.AppliedImpulse) >= breakForce)//@TODO: Add break torque
-			//{
-			//	thisJoint.Deactivate ();
-			//	Destroy (this);
-			//}
-
 		}
 
 		protected virtual void OnDrawGizmosSelected ()
