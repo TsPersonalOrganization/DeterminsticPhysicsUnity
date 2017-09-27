@@ -91,7 +91,7 @@ namespace TrueSync {
 
             for (int i = 0; i < sortedBodies.Count; i++)
             {
-                Debug.Log(sortedBodies[i].transform.name + " Ts colider position: " + sortedBodies[i].tsTransform.position);
+                ///Debug.Log(sortedBodies[i].transform.name + " Ts colider position: " + sortedBodies[i].tsTransform.position);
 
                 AddBody(sortedBodies[i]);
             }

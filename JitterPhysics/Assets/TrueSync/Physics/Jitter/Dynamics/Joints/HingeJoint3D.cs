@@ -50,8 +50,8 @@ namespace TrueSync.Physics3D
 		}
 
 		public HingeJoint3D (IWorld world,IBody3D body1,IBody3D body2,TSVector position,TSVector hingeAxis) : base ((World)world)
-		{
-			firstBody = body1;
+		{            
+            firstBody = body1;
 			secondBody = body2;
 			hingeA = hingeAxis;
 			worldPointConstraint = new PointOnPoint[2];

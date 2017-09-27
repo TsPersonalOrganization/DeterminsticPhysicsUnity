@@ -132,7 +132,7 @@ namespace Dynamics {
         /// <param name="targetVector"></param>
         /// <param name="stability"></param>
         /// <param name="speed"></param>
-        public static void AlignToVector(TSRigidBody r, Vector3 alignmentVector, Vector3 targetVector, float stability, FP speed, bool debug = false)
+        public static void AlignToVector(TSRigidBody r, TSVector alignmentVector, TSVector targetVector, FP stability, FP speed, bool debug = false)
         {
             if (r == null)
             {
@@ -142,22 +142,25 @@ namespace Dynamics {
             // 围绕着某个轴进行了一个角度的旋转 angleAxis(x,y). x = 角度 y = 轴
             // x 角度值为 当前转向速度 * Stability 是一个 radian 值， * 57.29 转为角度值， 除以 speed 后 才是真正的角度值
             // part.angularVelocity 是当前旋转速度， 把旋转速度变为轴？
-            Quaternion angleAxis = Quaternion.AngleAxis( r.angularVelocity.magnitude.AsFloat() * 57.29578f * stability / speed.AsFloat(), r.angularVelocity.ToVector());
+            Quaternion angleAxis = Quaternion.AngleAxis( r.angularVelocity.magnitude.AsFloat() * 57.29578f * stability.AsFloat() / speed.AsFloat(), r.angularVelocity.ToVector());
+
+            
 
             // Vector3.Cross 是叉乘， alignmentVector 是当前我们把part 某个轴要对准target Vector 的向量， angleAxis 四元素乘以AlignmentVector 是把alignmentVector 方向调整为四元素方向
             // targetVector 是我们想要对准的角度
             // 叉乘出来的 a 就是 两个向量的九十度角的向量用来作为我们的旋转轴
-            Vector3 a = Vector3.Cross(angleAxis * alignmentVector, targetVector * 10f);
+            Vector3 a = Vector3.Cross(angleAxis * alignmentVector.ToVector(), targetVector.ToVector() * 10f);
             
             if (!float.IsNaN(a.x) && !float.IsNaN(a.y) && !float.IsNaN(a.z))
             {
+                Debug.Log(a.ToTSVector());
 
                 r.AddTorque(a.ToTSVector() * speed * speed);
 
                 if (debug)
                 {
-                    Debug.DrawRay(r.position.ToVector(), alignmentVector * 0.3f, Color.red, 0f, false);
-                    Debug.DrawRay(r.position.ToVector(), targetVector * 0.3f, Color.green, 0f, false);
+                    Debug.DrawRay(r.position.ToVector(), alignmentVector.ToVector() * 0.3f, Color.red, 0f, false);
+                    Debug.DrawRay(r.position.ToVector(), targetVector.ToVector() * 0.3f, Color.green, 0f, false);
                 }
 
             }

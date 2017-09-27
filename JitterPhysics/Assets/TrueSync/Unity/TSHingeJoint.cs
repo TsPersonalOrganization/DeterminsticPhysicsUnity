@@ -59,6 +59,7 @@ namespace TrueSync
 			Vector3 worldAxis = transform.TransformDirection (Axis);
 			TSWorldAxis = worldAxis.ToTSVector ();
 
+            Debug.Log("Hinge joint");
 
 			//if (useLimits)
 			//    thisJoint = new LimitedHingeJoint(PhysicsWorldManager.instance.GetWorld(), body1, body2, TSworldPos, TSWorldAxis, -Limits.Min, Limits.Max);

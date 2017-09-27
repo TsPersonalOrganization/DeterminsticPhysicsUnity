@@ -14,11 +14,14 @@ public class Humanoid : TrueSyncBehaviour
     public TSRigidBody leftArm;
     public TSRigidBody rightArm;
 
-    public TSRigidBody leftLeg;
-    public TSRigidBody rightLeg;
+    public TSRigidBody spring;
+    public TSRigidBody ball;
 
-    public TSRigidBody leftFoot;
+    public TSRigidBody rightLeg;
+    public TSRigidBody leftLeg;
     public TSRigidBody rightFoot;
+    public TSRigidBody leftFoot;
+
 
     public override void OnSyncedStart()
     {
@@ -35,25 +38,35 @@ public class Humanoid : TrueSyncBehaviour
     /**
     * @brief Updates ball's movements and instantiates new ball objects when player press space.
     **/
+
+    int counter = 0;
     public override void OnSyncedUpdate()
     {
         base.OnSyncedUpdate();
 
-        //Debug.Log("testing spine and pevlis");
-        head.AddForce(TSVector.up * 100);
-        spine.AddForce(TSVector.up * 100);
-        pelvis.AddForce(TSVector.up * 200);
+        counter++;
 
-        leftLeg.AddForce(TSVector.down * 150);
-        rightLeg.AddForce(TSVector.down * 150);
+        if (counter > 10)
+        {
+            //Debug.Log("testing spine and pevlis");
+            head.AddForce(TSVector.up * 300);
+            spine.AddForce(TSVector.up * 300);
+            pelvis.AddForce(TSVector.up * 300);
 
-        leftFoot.AddForce(TSVector.down * 50);
-        rightFoot.AddForce(TSVector.down * 50);
+            leftLeg.AddForce(TSVector.down * 300);
+            rightLeg.AddForce(TSVector.down * 300);
 
-        JitterPhysicsTools.AlignToVector(spine, spine.tsTransform.forward.ToVector(), pelvis.transform.forward, 0.1f, 6.0f);
-        JitterPhysicsTools.AlignToVector(head, head.tsTransform.forward.ToVector(), pelvis.transform.forward, 0.1f, 6.0f);
+            leftFoot.AddForce(TSVector.down * 150);
+            rightFoot.AddForce(TSVector.down * 150);
 
-        
+            //spring.AddForce(TSVector.down * 0);
+            //ball.AddForce(TSVector.down * 10);
+
+            JitterPhysicsTools.AlignToVector(spine, spine.tsTransform.forward, pelvis.tsTransform.forward, 0.1f, 6.0f);
+            JitterPhysicsTools.AlignToVector(head, head.tsTransform.forward, pelvis.tsTransform.forward, 0.1f, 6.0f);
+
+            //ball.AddTorque(TSVector.right * 100);
+        }
         //pelvis.AddForce(TSVector.up * 20, ForceMode.VelocityChange);
         //head.AddForce(TSVector.up * 20, ForceMode.VelocityChange);
 

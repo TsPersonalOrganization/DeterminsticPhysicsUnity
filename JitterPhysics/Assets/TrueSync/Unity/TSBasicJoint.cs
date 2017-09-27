@@ -34,7 +34,22 @@ namespace TrueSync
 			thisJoint = new BasicJoint3D (PhysicsWorldManager.instance.GetWorld (), body1, body2, TSworldPos);
 		}
 
-		protected virtual void OnDrawGizmosSelected ()
+
+        //public override void OnSyncedUpdate()
+        //{
+        //    //if (useSpring)
+        //    //{
+        //    //    //Adding a spring and damper Term to the Equation of Motion 
+        //    //    thisBody.AddTorque((-1) * TSWorldAxis * ((thisJoint.getHingeAngle() - Spring.tagetPosition) * Spring.spring + thisJoint.getAngularVel() * Spring.damper));
+        //    //}
+
+
+        //    Debug.Log("applied impulse " + TSMath.Abs(thisJoint.AppliedImpulse));
+
+       
+        //}
+
+        protected virtual void OnDrawGizmosSelected ()
 		{
 			UnityEditor.Handles.SphereHandleCap (0, transform.TransformPoint (anchor), Quaternion.identity, 0.1f, EventType.Repaint);
 			Vector3 v3 = transform.rotation * Axis;

@@ -516,8 +516,12 @@ namespace TrueSync.Physics3D
         /// <param name="constraint">The constraint which should be removed.</param>
         public void AddConstraint(Constraint constraint)
         {
-            if(constraints.Contains(constraint)) 
-                throw new ArgumentException("The constraint was already added to the world.", "constraint");
+            if (constraints.Contains(constraint))
+            {
+                //throw new ArgumentException("The constraint was already added to the world.", "constraint");
+
+                return;
+            }
 
             constraints.Add(constraint);
 
