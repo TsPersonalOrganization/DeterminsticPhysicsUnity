@@ -7,10 +7,10 @@ namespace TrueSync {
     /**
      *  @brief Represents a physical 3D rigid body.
      **/
-    [RequireComponent(typeof(TSCollider))]
+	[RequireComponent(typeof(TSCollider), typeof (PrefabFixer))]
     [AddComponentMenu("TrueSync/Physics/TSRigidBody", 11)]
     public class TSRigidBody : MonoBehaviour {
-
+		
         public enum InterpolateMode { None, Interpolate, Extrapolate };
 
         [FormerlySerializedAs("mass")]
