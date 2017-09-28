@@ -81,7 +81,6 @@ namespace TrueSync {
             }
         }
 
-        [SerializeField]
         [HideInInspector]
         private bool _serialized;
 
