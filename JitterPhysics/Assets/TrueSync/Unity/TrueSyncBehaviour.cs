@@ -45,21 +45,7 @@ namespace TrueSync {
                 return _tsTransform;
             }
         }
-
-        private TSTransform2D _tsTransform2D;
-
-        /**
-         *  @brief Returns the {@link TSTransform2D} attached.
-         */
-        public TSTransform2D tsTransform2D {
-            get {
-                if (_tsTransform2D == null) {
-                    _tsTransform2D = this.GetComponent<TSTransform2D>();
-                }
-
-                return _tsTransform2D;
-            }
-        }
+        
 
         private TSRigidBody _tsRigidBody;
 
@@ -75,22 +61,7 @@ namespace TrueSync {
                 return _tsRigidBody;
             }
         }
-
-        private TSRigidBody2D _tsRigidBody2D;
-
-        /**
-         *  @brief Returns the {@link TSRigidBody2D} attached.
-         */
-        public TSRigidBody2D tsRigidBody2D {
-            get {
-                if (_tsRigidBody2D == null) {
-                    _tsRigidBody2D = this.GetComponent<TSRigidBody2D>();
-                }
-
-                return _tsRigidBody2D;
-            }
-        }
-
+        
         private TSCollider _tsCollider;
 
         /**
@@ -105,22 +76,7 @@ namespace TrueSync {
                 return _tsCollider;
             }
         }
-
-        private TSCollider2D _tsCollider2D;
-
-        /**
-         *  @brief Returns the {@link TSCollider2D} attached.
-         */
-        public TSCollider2D tsCollider2D {
-            get {
-                if (_tsCollider2D == null) {
-                    _tsCollider2D = this.GetComponent<TSCollider2D>();
-                }
-
-                return _tsCollider2D;
-            }
-        }
-
+        
         /**
          * @brief It is not called for instances of {@link TrueSyncBehaviour}.
          **/

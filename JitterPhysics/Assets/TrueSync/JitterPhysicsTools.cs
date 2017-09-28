@@ -153,7 +153,7 @@ namespace Dynamics {
             
             if (!float.IsNaN(a.x) && !float.IsNaN(a.y) && !float.IsNaN(a.z))
             {
-                Debug.Log(a.ToTSVector());
+                //Debug.Log(a.ToTSVector());
 
                 r.AddTorque(a.ToTSVector() * speed * speed);
 

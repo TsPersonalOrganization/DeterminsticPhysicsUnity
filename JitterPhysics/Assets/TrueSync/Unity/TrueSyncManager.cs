@@ -555,24 +555,7 @@ namespace TrueSync {
                 }
             }
 
-            TSTransform2D rootTSTransform2D = go.GetComponent<TSTransform2D>();
-            if (rootTSTransform2D != null) {
-                rootTSTransform2D.Initialize();
-
-                rootTSTransform2D.position = new TSVector2(position.x, position.y);
-                rootTSTransform2D.rotation = rotation.ToQuaternion().eulerAngles.z;
-            }
-
-            TSTransform2D[] tsTransforms2D = go.GetComponentsInChildren<TSTransform2D>();
-            if (tsTransforms2D != null) {
-                for (int index = 0, length = tsTransforms2D.Length; index < length; index++) {
-                    TSTransform2D tsTransform2D = tsTransforms2D[index];
-
-                    if (tsTransform2D != rootTSTransform2D) {
-                        tsTransform2D.Initialize();
-                    }
-                }
-            }
+            
         }
 
         /**
@@ -604,14 +587,7 @@ namespace TrueSync {
                         DestroyTSRigidBody(tsCollider.gameObject, tsCollider.Body);
                     }
                 }
-
-                TSCollider2D[] tsColliders2D = gameObject.GetComponentsInChildren<TSCollider2D>();
-                if (tsColliders2D != null) {
-                    for (int index = 0, length = tsColliders2D.Length; index < length; index++) {
-                        TSCollider2D tsCollider2D = tsColliders2D[index];
-                        DestroyTSRigidBody(tsCollider2D.gameObject, tsCollider2D.Body);
-                    }
-                }
+                
             }
         }
 
@@ -686,16 +662,6 @@ namespace TrueSync {
                         }
                     }
 
-                    TSCollider2D[] tsCollider2Ds = ((TrueSyncBehaviour)tsmb.trueSyncBehavior).gameObject.GetComponentsInChildren<TSCollider2D>();
-                    if (tsCollider2Ds != null) {
-                        for (int index2 = 0, length2 = tsCollider2Ds.Length; index2 < length2; index2++) {
-                            TSCollider2D tsCollider2D = tsCollider2Ds[index2];
-
-                            if (!tsCollider2D.Body.TSDisabled) {
-                                DestroyTSRigidBody(tsCollider2D.gameObject, tsCollider2D.Body);
-                            }
-                        }
-                    }
                 }
             }
         }

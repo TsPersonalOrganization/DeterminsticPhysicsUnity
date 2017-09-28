@@ -20,15 +20,15 @@ namespace TrueSync.Physics3D
             : base((World)world)
         {
             fixedAngle = new FixedAngle((RigidBody)body1, (RigidBody)body2);
-            pointOnLine = new PointOnLine((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, ((RigidBody)body2).position);
+            pointOnLine = new PointOnLine((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position , ((RigidBody)body2).position);
 
-            minDistance = new PointPointDistance((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, ((RigidBody)body2).position);
-            minDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMinimumDistance;
-            minDistance.Distance = minimumDistance;
+            //minDistance = new PointPointDistance((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, ((RigidBody)body2).position);
+            //minDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMinimumDistance;
+            //minDistance.Distance = minimumDistance;
 
-            maxDistance = new PointPointDistance((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, ((RigidBody)body2).position);
-            maxDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
-            maxDistance.Distance = maximumDistance;
+            //maxDistance = new PointPointDistance((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, ((RigidBody)body2).position);
+            //maxDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
+            //maxDistance.Distance = maximumDistance;
 
             StateTracker.AddTracking(fixedAngle);
             StateTracker.AddTracking(pointOnLine);
@@ -40,8 +40,8 @@ namespace TrueSync.Physics3D
 
         public override void Activate()
         {            
-            World.AddConstraint(maxDistance);
-            World.AddConstraint(minDistance);
+            //World.AddConstraint(maxDistance);
+            //World.AddConstraint(minDistance);
 
             World.AddConstraint(fixedAngle);
             World.AddConstraint(pointOnLine);
@@ -49,8 +49,8 @@ namespace TrueSync.Physics3D
 
         public override void Deactivate()
         {
-            World.RemoveConstraint(maxDistance);
-            World.RemoveConstraint(minDistance);
+            //World.RemoveConstraint(maxDistance);
+            //World.RemoveConstraint(minDistance);
 
             World.RemoveConstraint(fixedAngle);
             World.RemoveConstraint(pointOnLine);

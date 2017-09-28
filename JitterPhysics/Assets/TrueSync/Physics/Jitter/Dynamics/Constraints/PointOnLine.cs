@@ -150,7 +150,7 @@ namespace TrueSync.Physics3D {
             accumulatedImpulse += lambda;
 
             if (!body1.isStatic)
-            {
+            {               
                 body1.linearVelocity += body1.inverseMass * lambda * jacobian[0];
                 body1.angularVelocity += TSVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
             }

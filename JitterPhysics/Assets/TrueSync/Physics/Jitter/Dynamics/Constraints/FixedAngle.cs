@@ -135,8 +135,8 @@ namespace TrueSync.Physics3D {
             bias = axis * biasFactor * (-FP.One / timestep);
 
             // Apply previous frame solution as initial guess for satisfying the constraint.
-            if (!body1.IsStatic) body1.angularVelocity += TSVector.Transform(accumulatedImpulse, body1.invInertiaWorld);
-            if (!body2.IsStatic) body2.angularVelocity += TSVector.Transform(-FP.One * accumulatedImpulse, body2.invInertiaWorld);
+            if (!body1.IsStatic) body1.angularVelocity = TSVector.Transform(accumulatedImpulse, body1.invInertiaWorld);
+            if (!body2.IsStatic) body2.angularVelocity = TSVector.Transform(-FP.One * accumulatedImpulse, body2.invInertiaWorld);
         }
 
         /// <summary>

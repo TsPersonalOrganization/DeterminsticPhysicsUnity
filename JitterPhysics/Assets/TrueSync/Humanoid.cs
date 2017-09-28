@@ -21,7 +21,22 @@ public class Humanoid : TrueSyncBehaviour
     public TSRigidBody leftLeg;
     public TSRigidBody rightFoot;
     public TSRigidBody leftFoot;
+    
+    /**
+    * @brief Key to set/get horizontal position from {@link TrueSyncInput}.
+    **/
+    private const byte INPUT_KEY_HORIZONTAL = 0;
 
+    /**
+    * @brief Key to set/get vertical position from {@link TrueSyncInput}.
+    **/
+    private const byte INPUT_KEY_VERTICAL = 1;
+
+    /**
+    * @brief Key to set/get jump state from {@link TrueSyncInput}.
+    **/
+    private const byte INPUT_KEY_CREATE = 2;
+    
 
     public override void OnSyncedStart()
     {
@@ -33,6 +48,13 @@ public class Humanoid : TrueSyncBehaviour
     **/
     public override void OnSyncedInput()
     {
+        float hor = Input.GetAxis("Horizontal");
+        float ver = Input.GetAxis("Vertical");
+        bool space = Input.GetKey(KeyCode.Space);
+
+        TrueSyncInput.SetInt(INPUT_KEY_HORIZONTAL, (int)(hor * 100));
+        TrueSyncInput.SetInt(INPUT_KEY_VERTICAL, (int)(ver * 100));
+        TrueSyncInput.SetBool(INPUT_KEY_CREATE, space);
     }
 
     /**
@@ -43,6 +65,19 @@ public class Humanoid : TrueSyncBehaviour
     public override void OnSyncedUpdate()
     {
         base.OnSyncedUpdate();
+
+        FP hor = (FP)TrueSyncInput.GetInt(INPUT_KEY_HORIZONTAL) / 100;
+        FP ver = (FP)TrueSyncInput.GetInt(INPUT_KEY_VERTICAL) / 100;
+        bool currentCreateState = TrueSyncInput.GetBool(INPUT_KEY_CREATE);
+
+        bool allowInput = false;
+
+        if(hor != 0 || ver != 0)
+        {
+            allowInput = true;
+            Debug.Log("allow input is true");
+        }
+       
 
         counter++;
 
@@ -59,8 +94,19 @@ public class Humanoid : TrueSyncBehaviour
             leftFoot.AddForce(TSVector.down * 150);
             rightFoot.AddForce(TSVector.down * 150);
 
-            //spring.AddForce(TSVector.down * 0);
-            //ball.AddForce(TSVector.down * 10);
+
+            if (allowInput)
+            {
+                //spring.AddForce(TSVector.down * 0);
+                ball.AddForce(TSVector.down * 100);
+            }
+            else
+            {
+                ball.MovePosition(pelvis.position);
+            }
+
+            
+
 
             JitterPhysicsTools.AlignToVector(spine, spine.tsTransform.forward, pelvis.tsTransform.forward, 0.1f, 6.0f);
             JitterPhysicsTools.AlignToVector(head, head.tsTransform.forward, pelvis.tsTransform.forward, 0.1f, 6.0f);
