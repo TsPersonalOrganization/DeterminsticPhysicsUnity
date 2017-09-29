@@ -78,11 +78,11 @@ namespace TrueSync
 				thisBody.AddTorque ((-1) * TSWorldAxis * ((thisJoint.getHingeAngle () - Spring.tagetPosition) * Spring.spring + thisJoint.getAngularVel () * Spring.damper));
 			}
 
-			if (TSMath.Abs (thisJoint.AppliedImpulse) >= breakForce)//@TODO: Add break torque
-			{
-				thisJoint.Deactivate ();
-				Destroy (this);
-			}
+			//if (TSMath.Abs (thisJoint.AppliedImpulse) >= breakForce)//@TODO: Add break torque
+			//{
+			//	thisJoint.Deactivate ();
+			//	Destroy (this);
+			//}
 
 		}
 

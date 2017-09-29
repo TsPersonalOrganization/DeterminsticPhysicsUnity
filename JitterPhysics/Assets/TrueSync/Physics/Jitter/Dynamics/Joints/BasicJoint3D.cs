@@ -28,7 +28,7 @@ namespace TrueSync.Physics3D
     public class BasicJoint3D : Joint3D
     {
 
-        private PointOnPoint[] worldPointConstraint;
+        private FixedPoint[] worldPointConstraint;
 
         private IBody3D firstBody;
         private IBody3D secondBody;
@@ -54,25 +54,34 @@ namespace TrueSync.Physics3D
             firstBody = body1;
             secondBody = body2;
             //hingeA = hingeAxis;
-            worldPointConstraint = new PointOnPoint[2];
+            worldPointConstraint = new FixedPoint[2];
             ///hingeAxis *= FP.Half;
             TSVector anchor = position;
             //TSVector.Add(ref anchor, ref hingeAxis, out anchor);
             TSVector anchor2 = position;
             //TSVector.Subtract(ref anchor2, ref hingeAxis, out anchor2);
-            worldPointConstraint[0] = new PointOnPoint((RigidBody)body1, (RigidBody)body2, anchor);
-            worldPointConstraint[1] = new PointOnPoint((RigidBody)body2, (RigidBody)body1, anchor2);
+
+            //pointLock = new PointPointDistance((RigidBody)body1, (RigidBody)body2, position, position);
+            //pointLock.Distance = 0;
+
+            //pointLock.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
+
+
+            worldPointConstraint[0] = new FixedPoint((RigidBody)body1, (RigidBody)body2, anchor);
+            worldPointConstraint[1] = new FixedPoint((RigidBody)body2, (RigidBody)body1, anchor2);
+            
+
             StateTracker.AddTracking(worldPointConstraint[0]);
             StateTracker.AddTracking(worldPointConstraint[1]);
 
             Activate();
         }
 
-        public PointOnPoint PointOnPointConstraint1 { get { return worldPointConstraint[0]; } }
+        public FixedPoint PointOnPointConstraint1 { get { return worldPointConstraint[0]; } }
 
-        public PointOnPoint PointOnPointConstraint2 { get { return worldPointConstraint[1]; } }
+        public FixedPoint PointOnPointConstraint2 { get { return worldPointConstraint[1]; } }
 
-        public virtual FP AppliedImpulse { get { return worldPointConstraint[0].AppliedImpulse + worldPointConstraint[1].AppliedImpulse; } }
+        //public virtual FP AppliedImpulse { get { return worldPointConstraint[0].AppliedImpulse + worldPointConstraint[1].AppliedImpulse; } }
 
         public FP getHingeAngle()
         {
@@ -92,6 +101,7 @@ namespace TrueSync.Physics3D
         {
             World.AddConstraint(worldPointConstraint[0]);
             World.AddConstraint(worldPointConstraint[1]);
+           // World.AddConstraint(pointLock);
         }
 
         /// <summary>
@@ -101,6 +111,7 @@ namespace TrueSync.Physics3D
         {
             World.RemoveConstraint(worldPointConstraint[0]);
             World.RemoveConstraint(worldPointConstraint[1]);
+            //World.RemoveConstraint(pointLock);
         }
 
     }

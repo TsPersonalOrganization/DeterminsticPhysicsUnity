@@ -664,12 +664,16 @@ namespace TrueSync.Physics3D {
             // Simultaneos solving and restitution is simply not possible
             // so fake it a bit by just applying restitution impulse when there
             // is a new contact.
-            /*if (relNormalVel < -FP.One && newContact)
+            // modified by tiger, uncommmented.
+            if (relNormalVel < -FP.One && newContact)
             {
                 restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
-            }*/
+            }
 
-			if (!newContact || TSMath.Abs (relNormalVel *= restitution) < restitution)
+            // added by seok
+            if (!newContact)
+
+            //if (!newContact || TSMath.Abs (relNormalVel *= restitution) < restitution)
 			{
 				relNormalVel = 0;
 			}

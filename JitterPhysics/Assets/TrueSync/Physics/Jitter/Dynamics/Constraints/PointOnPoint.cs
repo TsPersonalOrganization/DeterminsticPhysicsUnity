@@ -78,27 +78,38 @@ namespace TrueSync.Physics3D {
 
         [AddTracking]
         TSVector[] jacobian = new TSVector[4];
-
+        
         /// <summary>
         /// Called once before iteration starts.
         /// </summary>
         /// <param name="timestep">The 5simulation timestep</param>
         public override void PrepareForIteration(FP timestep)
         {
+            // convert anchor into body1's local matrix, r1 is actually the local anchor point with respect to body1
+
             TSVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
+
+
+            // convert anchor point to body2's local matrix, and r2 is actually the local anchor point with respect to body2
             TSVector.Transform(ref localAnchor2, ref body2.orientation, out r2);
 
+           
             TSVector p1, p2, dp;
+            
             TSVector.Add(ref body1.position, ref r1, out p1);
             TSVector.Add(ref body2.position, ref r2, out p2);
 
+            // 這個是真正的距離
             TSVector.Subtract(ref p2, ref p1, out dp);
 
             FP deltaLength = dp.magnitude;
 
+            // 這個是距離向量
             TSVector n = p2 - p1;
-            if (n.sqrMagnitude != FP.Zero) n.Normalize();
+            if (n.sqrMagnitude != FP.Zero)
+                n.Normalize();
 
+            // 跳過這裏， 就是用來 計算 effectiveMass
             jacobian[0] = -FP.One * n;
             jacobian[1] = -FP.One * (r1 % n);
             jacobian[2] = FP.One * n;
@@ -111,23 +122,25 @@ namespace TrueSync.Physics3D {
             softnessOverDt = softness / timestep;
             effectiveMass += softnessOverDt;
 
-            effectiveMass = FP.One / effectiveMass;
+            if (effectiveMass != 0)
+                effectiveMass = FP.One / effectiveMass;
 
             bias = deltaLength * biasFactor * (FP.One / timestep);
-
+            
+            
             if (!body1.isStatic)
             {
+                // jacobian[1] 是針對兩個物體往下的向量, 這樣才能保持一致嘛
                 body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
                 body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
             }
 
             if (!body2.isStatic)
             {
-                body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
+                // jacobian[2] 是往上的向量, 這樣才能保持一致
+                body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];                
                 body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
             }
-
-
         }
 
         /// <summary>
@@ -143,7 +156,7 @@ namespace TrueSync.Physics3D {
 
             FP softnessScalar = accumulatedImpulse * softnessOverDt;
 
-            FP lambda = -effectiveMass * (jv + bias + softnessScalar);
+            FP lambda = -effectiveMass * (jv + softnessScalar + bias);
 
             accumulatedImpulse += lambda;
 

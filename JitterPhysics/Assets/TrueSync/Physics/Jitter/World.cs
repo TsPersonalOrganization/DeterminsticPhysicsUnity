@@ -753,20 +753,25 @@ namespace TrueSync.Physics3D
                     int contactCount = arbiter.contactList.Count;
                     for (int e = 0; e < contactCount; e++)
                     {
-                        if (i == -1) arbiter.contactList[e].PrepareForIteration(timestep);
-                        else arbiter.contactList[e].Iterate();
+                        if (i == -1)
+                            arbiter.contactList[e].PrepareForIteration(timestep);
+                        else
+                            arbiter.contactList[e].Iterate();
                     }
                 }
 
                 //  Constraints
-                for (int index = 0, length = island.constraints.Count; index < length; index++) {
+                for (int index = 0, length = island.constraints.Count; index < length; index++)
+                {
                     Constraint c = island.constraints[index];
 
                     if (c.body1 != null && !c.body1.IsActive && c.body2 != null && !c.body2.IsActive)
                         continue;
 
-                    if (i == -1) c.PrepareForIteration(timestep);
-                    else c.Iterate();
+                    if (i == -1)
+                        c.PrepareForIteration(timestep);
+                    else
+                        c.Iterate();
                 }
 
             }
@@ -979,7 +984,8 @@ namespace TrueSync.Physics3D
                 bool deactivateIsland = true;
 
                 // global allowdeactivation
-                if (!this.AllowDeactivation) deactivateIsland = false;
+                if (!this.AllowDeactivation)
+                    deactivateIsland = false;
                 else
                 {
                     for (int index = 0, length = island.bodies.Count; index < length; index++) {

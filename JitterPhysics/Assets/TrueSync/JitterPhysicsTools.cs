@@ -124,6 +124,8 @@ namespace Dynamics {
 		//}
 
 
+
+
         /// <summary>
         /// align to vector
         /// </summary>
@@ -166,6 +168,35 @@ namespace Dynamics {
             }
         }
 
+
+        public static void PhyxAlignToVector(Rigidbody r, Vector3 alignmentVector, Vector3 targetVector, float stability, float speed, bool debug = false)
+        {
+            if (r == null)
+            {
+                return;
+            }
+
+            // 围绕着某个轴进行了一个角度的旋转 angleAxis(x,y). x = 角度 y = 轴
+            // x 角度值为 当前转向速度 * Stability 是一个 radian 值， * 57.29 转为角度值， 除以 speed 后 才是真正的角度值
+            // part.angularVelocity 是当前旋转速度， 把旋转速度变为轴？
+            Quaternion angleAxis = Quaternion.AngleAxis(r.angularVelocity.magnitude * 57.29578f * stability / speed, r.angularVelocity);
+
+
+
+            // Vector3.Cross 是叉乘， alignmentVector 是当前我们把part 某个轴要对准target Vector 的向量， angleAxis 四元素乘以AlignmentVector 是把alignmentVector 方向调整为四元素方向
+            // targetVector 是我们想要对准的角度
+            // 叉乘出来的 a 就是 两个向量的九十度角的向量用来作为我们的旋转轴
+            Vector3 a = Vector3.Cross(angleAxis * alignmentVector, targetVector * 10f);
+
+            if (!float.IsNaN(a.x) && !float.IsNaN(a.y) && !float.IsNaN(a.z))
+            {
+                //Debug.Log(a.ToTSVector());
+
+                r.AddTorque(a * speed * speed);
+
+            }
+        }
+
         ///// <summary>
         ///// Adds a force to a Rigidbody that gets it from one place to another within a single simulation step using any force mode.
         ///// </summary>
@@ -175,7 +206,7 @@ namespace Dynamics {
 
         //    // 去除或者加上已经有的velocity.
         //    requiredVelocity -= r.velocity;
-            
+
         //    requiredVelocity *= forcePercent;
 
         //    switch (forceMode)
@@ -205,7 +236,7 @@ namespace Dynamics {
         //            break;
         //    }
 
-            
+
         //}
 
         ///// <summary>
