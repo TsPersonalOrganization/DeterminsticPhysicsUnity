@@ -11,13 +11,20 @@ namespace TrueSync
 
 		[SerializeField]
 		TSCollider connectedBody;
-		[SerializeField]
+
+        [SerializeField]
 		Vector3 anchor;
+
+        [SerializeField]
+        Vector3 connectedAnchor;
+
 		[SerializeField]
 		Vector3 Axis;
+
 		[SerializeField]
 		LimitElements Limits;
-		[SerializeField]
+
+        [SerializeField]
 		FP breakForce = FP.PositiveInfinity;
 
 		TSVector TSWorldAxis;
@@ -27,11 +34,9 @@ namespace TrueSync
 			thisBody = GetComponent<TSRigidBody> ();
 			IBody3D body1 = GetComponent<TSCollider> ().Body;
 			IBody3D body2 = connectedBody.Body;
-
-			Vector3 worldPos = transform.TransformPoint (anchor);
-			TSVector TSworldPos = worldPos.ToTSVector ();
-
-			thisJoint = new BasicJoint3D (PhysicsWorldManager.instance.GetWorld (), body1, body2, TSworldPos);
+            
+			thisJoint = new BasicJoint3D (PhysicsWorldManager.instance.GetWorld (), body1, body2, transform.TransformPoint(anchor).ToTSVector(),
+                transform.TransformPoint(connectedAnchor).ToTSVector());
 		}
 
 

@@ -357,7 +357,7 @@ namespace TrueSync.Physics3D {
         /// </summary>
         /// <param name="force">The force to add next <see cref="World.Step"/>.</param>
         /// <param name="pos">The position where the force is applied.</param>
-        public void AddForce(TSVector force, TSVector pos)
+        public void     AddForce(TSVector force, TSVector pos)
         {
             TSVector.Add(ref this.force, ref force, out this.force);
             TSVector.Subtract(ref pos, ref this.position, out pos);

@@ -44,31 +44,31 @@ namespace TrueSync.Physics3D
         /// <param name="position">The position in world space where both bodies get connected.</param>
         /// <param name="hingeAxis">The axis if the hinge.</param>
         /// 
-        public static void Create(IWorld world, IBody3D body1, IBody3D body2, TSVector position)
+        public static void Create(IWorld world, IBody3D body1, IBody3D body2, TSVector anchorPosition, TSVector anchorPosition2)
         {
-            new BasicJoint3D(world, body1, body2, position);
+            new BasicJoint3D(world, body1, body2, anchorPosition, anchorPosition2);
         }
 
-        public BasicJoint3D(IWorld world, IBody3D body1, IBody3D body2, TSVector position) : base((World)world)
+        public BasicJoint3D(IWorld world, IBody3D body1, IBody3D body2, TSVector anchorPosition, TSVector anchorPosition2) : base((World)world)
         {
             firstBody = body1;
             secondBody = body2;
             //hingeA = hingeAxis;
             worldPointConstraint = new FixedPoint[2];
             ///hingeAxis *= FP.Half;
-            TSVector anchor = position;
+            TSVector anchor = anchorPosition;
             //TSVector.Add(ref anchor, ref hingeAxis, out anchor);
-            TSVector anchor2 = position;
+            TSVector anchor2 = anchorPosition2;
             //TSVector.Subtract(ref anchor2, ref hingeAxis, out anchor2);
-
+    
             //pointLock = new PointPointDistance((RigidBody)body1, (RigidBody)body2, position, position);
             //pointLock.Distance = 0;
 
             //pointLock.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
 
 
-            worldPointConstraint[0] = new FixedPoint((RigidBody)body1, (RigidBody)body2, anchor);
-            worldPointConstraint[1] = new FixedPoint((RigidBody)body2, (RigidBody)body1, anchor2);
+            worldPointConstraint[0] = new FixedPoint((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, anchorPosition);
+            worldPointConstraint[1] = new FixedPoint((RigidBody)body2, (RigidBody)body1, ((RigidBody)body2).position, anchorPosition);
             
 
             StateTracker.AddTracking(worldPointConstraint[0]);
