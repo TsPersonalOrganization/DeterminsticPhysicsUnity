@@ -19,7 +19,7 @@ namespace TrueSync.Physics3D
         public PrismaticJoint3D(IWorld world, IBody3D body1, IBody3D body2, FP minimumDistance, FP maximumDistance)
             : base((World)world)
         {
-            fixedAngle = new FixedAngle((RigidBody)body1, (RigidBody)body2);
+            //fixedAngle = new FixedAngle((RigidBody)body1, (RigidBody)body2);
             pointOnLine = new PointOnLine((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position , ((RigidBody)body2).position);
 
             //minDistance = new PointPointDistance((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, ((RigidBody)body2).position);
@@ -30,7 +30,7 @@ namespace TrueSync.Physics3D
             //maxDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
             //maxDistance.Distance = maximumDistance;
 
-            StateTracker.AddTracking(fixedAngle);
+            //StateTracker.AddTracking(fixedAngle);
             StateTracker.AddTracking(pointOnLine);
             //StateTracker.AddTracking(minDistance);
             //StateTracker.AddTracking(maxDistance);
@@ -43,7 +43,7 @@ namespace TrueSync.Physics3D
             //World.AddConstraint(maxDistance);
             //World.AddConstraint(minDistance);
 
-            World.AddConstraint(fixedAngle);
+           // World.AddConstraint(fixedAngle);
             World.AddConstraint(pointOnLine);
         }
 
@@ -52,7 +52,7 @@ namespace TrueSync.Physics3D
             //World.RemoveConstraint(maxDistance);
             //World.RemoveConstraint(minDistance);
 
-            World.RemoveConstraint(fixedAngle);
+            //World.RemoveConstraint(fixedAngle);
             World.RemoveConstraint(pointOnLine);
         }
     }

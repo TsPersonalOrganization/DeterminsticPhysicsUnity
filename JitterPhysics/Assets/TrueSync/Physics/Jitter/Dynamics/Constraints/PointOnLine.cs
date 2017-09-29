@@ -122,13 +122,13 @@ namespace TrueSync.Physics3D {
             if (!body1.isStatic)
             {
                 body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
-                body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
+                //body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
             }
 
             if (!body2.isStatic)
             {
                 body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
-                body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
+                //body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
             }
         }
 
@@ -152,13 +152,13 @@ namespace TrueSync.Physics3D {
             if (!body1.isStatic)
             {               
                 body1.linearVelocity += body1.inverseMass * lambda * jacobian[0];
-                body1.angularVelocity += TSVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
+                //body1.angularVelocity += TSVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
             }
 
             if (!body2.isStatic)
             {
                 body2.linearVelocity += body2.inverseMass * lambda * jacobian[2];
-                body2.angularVelocity += TSVector.Transform(lambda * jacobian[3], body2.invInertiaWorld);
+                //body2.angularVelocity += TSVector.Transform(lambda * jacobian[3], body2.invInertiaWorld);
             }
         }
 

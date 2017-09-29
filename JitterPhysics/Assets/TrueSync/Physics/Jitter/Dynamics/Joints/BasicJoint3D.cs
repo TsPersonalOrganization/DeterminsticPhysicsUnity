@@ -59,27 +59,28 @@ namespace TrueSync.Physics3D
             TSVector anchor = anchorPosition;
             //TSVector.Add(ref anchor, ref hingeAxis, out anchor);
             TSVector anchor2 = anchorPosition2;
+
+
             //TSVector.Subtract(ref anchor2, ref hingeAxis, out anchor2);
-    
+
             //pointLock = new PointPointDistance((RigidBody)body1, (RigidBody)body2, position, position);
             //pointLock.Distance = 0;
-
             //pointLock.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
 
 
-            worldPointConstraint[0] = new FixedPoint((RigidBody)body1, (RigidBody)body2, ((RigidBody)body1).position, anchorPosition);
-            worldPointConstraint[1] = new FixedPoint((RigidBody)body2, (RigidBody)body1, ((RigidBody)body2).position, anchorPosition);
+            worldPointConstraint[0] = new FixedPoint((RigidBody)body1, (RigidBody)body2, anchor, anchor);
+            worldPointConstraint[1] = new FixedPoint((RigidBody)body2, (RigidBody)body1, anchor, anchor);
             
 
             StateTracker.AddTracking(worldPointConstraint[0]);
-            StateTracker.AddTracking(worldPointConstraint[1]);
+            //StateTracker.AddTracking(worldPointConstraint[1]);
 
             Activate();
         }
 
-        public FixedPoint PointOnPointConstraint1 { get { return worldPointConstraint[0]; } }
+        public FixedPoint FixedPointConstraint1 { get { return worldPointConstraint[0]; } }
 
-        public FixedPoint PointOnPointConstraint2 { get { return worldPointConstraint[1]; } }
+        public FixedPoint FixedPointConstraint2 { get { return worldPointConstraint[1]; } }
 
         //public virtual FP AppliedImpulse { get { return worldPointConstraint[0].AppliedImpulse + worldPointConstraint[1].AppliedImpulse; } }
 

@@ -741,8 +741,10 @@ namespace TrueSync.Physics3D
             CollisionIsland island = obj as CollisionIsland;
 
             int thisIterations;
-            if (island.Bodies.Count + island.Constraints.Count > 3) thisIterations = contactIterations;
-            else thisIterations = smallIterations;
+            if (island.Bodies.Count + island.Constraints.Count > 3)
+                thisIterations = contactIterations;
+            else
+                thisIterations = smallIterations;
 
             for (int i = -1; i < thisIterations; i++)
             {

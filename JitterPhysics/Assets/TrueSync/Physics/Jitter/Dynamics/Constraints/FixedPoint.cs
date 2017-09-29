@@ -35,7 +35,10 @@ namespace TrueSync.Physics3D
         [AddTracking]
         private FP biasFactor = 1 * FP.EN2;
         [AddTracking]
-        private FP softness = FP.EN2;
+        private FP softness = 5 * FP.EN2;
+
+        private TSVector anchor_1;
+        private TSVector anchor_2;
 
         /// <summary>
         /// Initializes a new instance of the DistanceConstraint class.
@@ -48,12 +51,10 @@ namespace TrueSync.Physics3D
         /// The distance is given by the initial distance between both anchor points.</param>
         public FixedPoint(RigidBody body1, RigidBody body2, TSVector anchor, TSVector anchor2)
             : base(body1, body2)
-        {
-           
+        {           
             TSVector.Subtract(ref anchor, ref body1.position, out localAnchor1);
             TSVector.Subtract(ref anchor2, ref body2.position, out localAnchor2);
             
-
             TSVector.Transform(ref localAnchor1, ref body1.invOrientation, out localAnchor1);
             TSVector.Transform(ref localAnchor2, ref body2.invOrientation, out localAnchor2);
 
@@ -94,15 +95,11 @@ namespace TrueSync.Physics3D
         /// <param name="timestep">The 5simulation timestep</param>
         public override void PrepareForIteration(FP timestep)
         {
-            // convert anchor into body1's local matrix, r1 is actually the local anchor point with respect to body1
-
             TSVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
-
 
             // convert anchor point to body2's local matrix, and r2 is actually the local anchor point with respect to body2
             TSVector.Transform(ref localAnchor2, ref body2.orientation, out r2);
-
-
+            
             TSVector p1, p2, dp;
 
             TSVector.Add(ref body1.position, ref r1, out p1);
@@ -123,7 +120,9 @@ namespace TrueSync.Physics3D
             jacobian[1] = -FP.One * (r1 % n);
             jacobian[2] = FP.One * n;
             jacobian[3] = (r2 % n);
-
+            
+            // 這個invIntertiaWorld 是angular velocity 的慣性， 
+            // 這個 body1.inverseMass + body2.inverseMass是...
             effectiveMass = body1.inverseMass + body2.inverseMass
                 + TSVector.Transform(jacobian[1], body1.invInertiaWorld) * jacobian[1]
                 + TSVector.Transform(jacobian[3], body2.invInertiaWorld) * jacobian[3];
@@ -131,58 +130,69 @@ namespace TrueSync.Physics3D
             softnessOverDt = softness / timestep;
             effectiveMass += softnessOverDt;
 
-
+            //UnityEngine.Debug.Log(" body1: " + body1.invInertiaWorld + " body2: " + body2.invInertiaWorld);
 
             if (effectiveMass != 0)
                 effectiveMass = FP.One / effectiveMass;
             
 
-            bias = deltaLength * biasFactor * (FP.One / timestep);
+            bias = deltaLength/2 *  (FP.One / timestep);
 
 
             //UnityEngine.Debug.Log("accumlated impulse " + accumulatedImpulse);
 
-            //if (!body1.isStatic)
-            //{
-            //    // jacobian[1] 是針對兩個物體往下的向量, 這樣才能保持一致嘛
-            //    body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
-            //    body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
-            //}
+            if (!body1.isStatic)
+            {
+                // jacobian[1] 是針對兩個物體往下的向量, 這樣才能保持一致嘛
+                body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
+                body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
+            }
 
-            //if (!body2.isStatic)
-            //{
-            //    // jacobian[2] 是往上的向量, 這樣才能保持一致
-            //    body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
-            //    body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
-            //}
+            if (!body2.isStatic)
+            {
+                // jacobian[2] 是往上的向量, 這樣才能保持一致
+                body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
+                body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
+            }
 
-            UnityEngine.Debug.DrawLine(body1.position.ToVector(), (body1.position + accumulatedImpulse * jacobian[0]).ToVector(), UnityEngine.Color.cyan);
-            UnityEngine.Debug.DrawLine(body2.position.ToVector(), (body2.position + accumulatedImpulse * jacobian[2]).ToVector(), UnityEngine.Color.yellow);
+            UnityEngine.Debug.DrawLine(body1.position.ToVector(), (body1.position + r1).ToVector(), UnityEngine.Color.cyan);
+            UnityEngine.Debug.DrawLine(body2.position.ToVector(), (body2.position + r2).ToVector(), UnityEngine.Color.red);
         }
 
         /// <summary>
         /// Iteratively solve this constraint.
         /// </summary>
         public override void Iterate()
-        { 
+        {
+            // calculate opposite force needed compare to velocity with respect to jacobian direction vel normalized.
+            //FP body1VelNeeded = body1.linearVelocity * jacobian[0] * -effectiveMass; 
+            //FP body1AngularVelNeeded = body1.angularVelocity * jacobian[1] * -effectiveMass * j; 
+            //FP body2VelNeeded = body2.linearVelocity * jacobian[2] * -effectiveMass;
+            //FP body2AngularVelNeeded = body2.angularVelocity * jacobian[3] * -effectiveMass;
+
+            // total resisit value needed.
             FP jv = body1.linearVelocity * jacobian[0] + body1.angularVelocity * jacobian[1] + body2.linearVelocity * jacobian[2] + body2.angularVelocity * jacobian[3];
 
-            FP lambda = jv + bias;
+            //UnityEngine.Debug.Log("effective mass " + effectiveMass);
+            FP softnessScalar = accumulatedImpulse * softnessOverDt;
 
-            //accumulatedImpulse += lambda;
+            FP lambda = jv + bias + softnessScalar;
+
+            accumulatedImpulse += -effectiveMass * lambda;
 
             if (!body1.isStatic)
             {
-                body1.linearVelocity += body1.inverseMass * -effectiveMass * lambda * jacobian[0];
+                body1.linearVelocity += body1.inverseMass * -effectiveMass * (lambda) * jacobian[0];
+
                 //body1.linearVelocity = TSVector.zero;
-                body1.angularVelocity += TSVector.Transform(lambda * -effectiveMass * jacobian[1], body1.invInertiaWorld);
+                body1.angularVelocity += TSVector.Transform((lambda) * -effectiveMass * jacobian[1], body1.invInertiaWorld);
             }
 
             if (!body2.isStatic)
             {
-                body2.linearVelocity += body2.inverseMass * -effectiveMass * lambda * jacobian[2];
+                body2.linearVelocity += body2.inverseMass * -effectiveMass * (lambda) * jacobian[2];
                 //body2.linearVelocity = TSVector.zero;
-                body2.angularVelocity += TSVector.Transform(lambda * -effectiveMass * jacobian[3], body2.invInertiaWorld);
+                body2.angularVelocity += TSVector.Transform((lambda) * -effectiveMass * jacobian[3], body2.invInertiaWorld);
             }
         }
 

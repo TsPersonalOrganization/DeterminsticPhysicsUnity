@@ -665,15 +665,15 @@ namespace TrueSync.Physics3D {
             // so fake it a bit by just applying restitution impulse when there
             // is a new contact.
             // modified by tiger, uncommmented.
-            if (relNormalVel < -FP.One && newContact)
-            {
-                restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
-            }
+            //if (relNormalVel < -FP.One && newContact)
+            //{
+            //    restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
+            //}
 
             // added by seok
-            if (!newContact)
+            //if (!newContact)
 
-            //if (!newContact || TSMath.Abs (relNormalVel *= restitution) < restitution)
+            if (!newContact || TSMath.Abs (relNormalVel *= restitution) < restitution)
 			{
 				relNormalVel = 0;
 			}
