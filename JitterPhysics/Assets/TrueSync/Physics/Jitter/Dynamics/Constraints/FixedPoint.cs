@@ -33,7 +33,7 @@ namespace TrueSync.Physics3D
         private TSVector r2;
 
         [AddTracking]
-        private FP biasFactor = 1 * FP.EN2;
+        private FP biasFactor = 5 * FP.EN2;
         [AddTracking]
         private FP softness = 5 * FP.EN2;
 
@@ -141,19 +141,19 @@ namespace TrueSync.Physics3D
 
             //UnityEngine.Debug.Log("accumlated impulse " + accumulatedImpulse);
 
-            if (!body1.isStatic)
-            {
-                // jacobian[1] 是針對兩個物體往下的向量, 這樣才能保持一致嘛
-                body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
-                body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
-            }
+            //if (!body1.isStatic)
+            //{
+            //    // jacobian[1] 是針對兩個物體往下的向量, 這樣才能保持一致嘛
+            //    body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
+            //    body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
+            //}
 
-            if (!body2.isStatic)
-            {
-                // jacobian[2] 是往上的向量, 這樣才能保持一致
-                body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
-                body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
-            }
+            //if (!body2.isStatic)
+            //{
+            //    // jacobian[2] 是往上的向量, 這樣才能保持一致
+            //    body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
+            //    body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
+            //}
 
             UnityEngine.Debug.DrawLine(body1.position.ToVector(), (body1.position + r1).ToVector(), UnityEngine.Color.cyan);
             UnityEngine.Debug.DrawLine(body2.position.ToVector(), (body2.position + r2).ToVector(), UnityEngine.Color.red);
@@ -171,27 +171,32 @@ namespace TrueSync.Physics3D
             //FP body2AngularVelNeeded = body2.angularVelocity * jacobian[3] * -effectiveMass;
 
             // total resisit value needed.
-            FP jv = body1.linearVelocity * jacobian[0] + body1.angularVelocity * jacobian[1] + body2.linearVelocity * jacobian[2] + body2.angularVelocity * jacobian[3];
-
+            FP jv = body1.linearVelocity * jacobian[0] + body2.linearVelocity * jacobian[2];
             //UnityEngine.Debug.Log("effective mass " + effectiveMass);
-            FP softnessScalar = accumulatedImpulse * softnessOverDt;
+            //FP softnessScalar = accumulatedImpulse * softnessOverDt;
 
-            FP lambda = jv + bias + softnessScalar;
+            FP lambda = jv + bias;
 
-            accumulatedImpulse += -effectiveMass * lambda;
+           // accumulatedImpulse += -effectiveMass * lambda;
 
             if (!body1.isStatic)
             {
-                body1.linearVelocity += body1.inverseMass * -effectiveMass * (lambda) * jacobian[0];
-
                 //body1.linearVelocity = TSVector.zero;
+
+                body1.linearVelocity = (body1.linearVelocity - body2.linearVelocity) * effectiveMass;
+                
+                //body1.angularVelocity = TSVector.zero;
                 body1.angularVelocity += TSVector.Transform((lambda) * -effectiveMass * jacobian[1], body1.invInertiaWorld);
             }
 
             if (!body2.isStatic)
             {
-                body2.linearVelocity += body2.inverseMass * -effectiveMass * (lambda) * jacobian[2];
+                //body2.linearVelocity += body2.inverseMass * -effectiveMass * (lambda) * jacobian[2];
                 //body2.linearVelocity = TSVector.zero;
+                body2.linearVelocity = (body2.linearVelocity - body1.linearVelocity) * effectiveMass;
+
+
+                //body2.angularVelocity = TSVector.zero;
                 body2.angularVelocity += TSVector.Transform((lambda) * -effectiveMass * jacobian[3], body2.invInertiaWorld);
             }
         }

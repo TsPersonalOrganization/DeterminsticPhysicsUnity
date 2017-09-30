@@ -158,12 +158,10 @@ namespace Dynamics {
                 //Debug.Log(a.ToTSVector());
 
                 r.AddTorque(a.ToTSVector() * speed * speed);
-
-                if (debug)
-                {
+               
                     Debug.DrawRay(r.position.ToVector(), alignmentVector.ToVector() * 0.3f, Color.red, 0f, false);
                     Debug.DrawRay(r.position.ToVector(), targetVector.ToVector() * 0.3f, Color.green, 0f, false);
-                }
+                
 
             }
         }

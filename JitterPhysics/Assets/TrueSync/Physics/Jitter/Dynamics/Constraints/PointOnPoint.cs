@@ -163,7 +163,6 @@ namespace TrueSync.Physics3D {
             if (!body1.isStatic)
             {
                 body1.linearVelocity += body1.inverseMass * lambda * jacobian[0];
-                //body1.linearVelocity = TSVector.
                 body1.angularVelocity += TSVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
             }
 

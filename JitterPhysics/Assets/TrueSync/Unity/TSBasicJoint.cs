@@ -40,19 +40,16 @@ namespace TrueSync
 		}
 
 
-        //public override void OnSyncedUpdate()
-        //{
-        //    //if (useSpring)
-        //    //{
-        //    //    //Adding a spring and damper Term to the Equation of Motion 
-        //    //    thisBody.AddTorque((-1) * TSWorldAxis * ((thisJoint.getHingeAngle() - Spring.tagetPosition) * Spring.spring + thisJoint.getAngularVel() * Spring.damper));
-        //    //}
-
-
-        //    Debug.Log("applied impulse " + TSMath.Abs(thisJoint.AppliedImpulse));
-
-       
-        //}
+        public override void OnSyncedUpdate()
+        {
+            //if (useSpring)
+            //{
+            //    //Adding a spring and damper Term to the Equation of Motion 
+            //    thisBody.AddTorque((-1) * TSWorldAxis * ((thisJoint.getHingeAngle() - Spring.tagetPosition) * Spring.spring + thisJoint.getAngularVel() * Spring.damper));
+            //}
+                
+        }
+#if UNITY_EDITOR
 
         protected virtual void OnDrawGizmosSelected ()
 		{
@@ -64,5 +61,6 @@ namespace TrueSync
 			}
 			UnityEditor.Handles.ArrowHandleCap (1, transform.TransformPoint (anchor), Quaternion.LookRotation (90 * v3), 1, EventType.Repaint);
 		}
-	}
+#endif
+    }
 }

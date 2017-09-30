@@ -86,7 +86,9 @@ namespace TrueSync
 
 		}
 
-		protected virtual void OnDrawGizmosSelected ()
+#if UNITY_EDITOR
+
+        protected virtual void OnDrawGizmosSelected ()
 		{
 			UnityEditor.Handles.SphereHandleCap (0, transform.TransformPoint (anchor), Quaternion.identity, 0.1f, EventType.Repaint);
 			Vector3 v3 = transform.rotation * Axis;
@@ -96,5 +98,6 @@ namespace TrueSync
 			}
 			UnityEditor.Handles.ArrowHandleCap (1, transform.TransformPoint (anchor), Quaternion.LookRotation (90 * v3), 1, EventType.Repaint);
 		}
-	}
+#endif
+    }
 }

@@ -24,6 +24,8 @@ public class Humanoid : TrueSyncBehaviour
 
     public FP speedRatio;
     public TSVector previousAngularVelocity = TSVector.one;
+
+    private TSVector direction;
     /**
     * @brief Key to set/get horizontal position from {@link TrueSyncInput}.
     **/
@@ -78,6 +80,9 @@ public class Humanoid : TrueSyncBehaviour
         {
             allowInput = true;
             //Debug.Log("allow input is true: " + hor + " : " + ver);
+
+
+            direction = new TSVector(hor, 0, ver);
         }
 
 
@@ -86,15 +91,7 @@ public class Humanoid : TrueSyncBehaviour
         //if (counter > 10)
         //{
         //Debug.Log("testing spine and pevlis");
-        head.AddForce(TSVector.up * 200);
-        spine.AddForce(TSVector.up * 200);
-        pelvis.AddForce(TSVector.up * 200);
-
-        leftLeg.AddForce(TSVector.down * 200);
-        rightLeg.AddForce(TSVector.down * 200);
-
-        leftFoot.AddForce(TSVector.down * 100);
-        rightFoot.AddForce(TSVector.down * 100);
+        
 
         if (allowInput)
         {
@@ -104,34 +101,76 @@ public class Humanoid : TrueSyncBehaviour
 
             ball.angularVelocity = a * speedRatio;
 
-            Debug.Log(ball.angularVelocity + " a: " + a);
+            //Debug.Log(ball.angularVelocity + " a: " + a);
 
             if (ball.angularVelocity.magnitude > 50)
                 ball.angularVelocity = previousAngularVelocity;
 
 
             previousAngularVelocity = ball.angularVelocity;
+
+            UpdateRunPose();
         }
         else
         {
             ball.angularVelocity = TSVector.zero;
-            //ball.MovePosition(pelvis.position);
+            UpdateStandingPose();
         }
-        //ball.AddTorque(a * speedRatio * 10);
-        pelvis.angularVelocity = TSVector.zero;
-        pelvis.velocity = TSVector.zero;
-        pelvis.MovePosition(new TSVector(ball.position.x, pelvis.position.y, ball.position.z));
+
+        ////pelvis.angularVelocity = TSVector.zero;
+        //pelvis.velocity = TSVector.zero;
+        //pelvis.MovePosition(new TSVector(ball.position.x, pelvis.position.y, ball.position.z));
     
+        
+    }
 
-        JitterPhysicsTools.AlignToVector(spine, spine.tsTransform.forward, pelvis.tsTransform.forward, 0.1f, 6.0f);
-        JitterPhysicsTools.AlignToVector(head, head.tsTransform.forward, pelvis.tsTransform.forward, 0.1f, 6.0f);
 
-        //ball.AddTorque(TSVector.right * 100);
-        //}
-        //pelvis.AddForce(TSVector.up * 20, ForceMode.VelocityChange);
-        //head.AddForce(TSVector.up * 20, ForceMode.VelocityChange);
+    private void UpdateStandingPose()
+    {
+        JitterPhysicsTools.AlignToVector(spine, spine.tsTransform.forward, direction.normalized, 0.001f, 12.0f);
+        JitterPhysicsTools.AlignToVector(head, head.tsTransform.forward, direction.normalized, 0.001f, 12.0f);
+        JitterPhysicsTools.AlignToVector(pelvis, pelvis.tsTransform.forward, direction.normalized, 0.001f, 12.0f);
 
-        // cube.AddForce(new Vector3(0, 2000000,0).ToTSVector());
+        head.AddForce(TSVector.up * 3000);
+        spine.AddForce(TSVector.up * 3000);
+        pelvis.AddForce(TSVector.up * 3000);
+
+        leftLeg.AddForce(TSVector.down * 3000);
+        rightLeg.AddForce(TSVector.down * 3000);
+
+        leftFoot.AddForce(TSVector.down * 1500);
+        rightFoot.AddForce(TSVector.down * 1500);
+    }
+
+
+    private void UpdateRunPose()
+    {
+        spine.angularVelocity = TSVector.zero;
+        head.angularVelocity = TSVector.zero;
+        pelvis.angularVelocity = TSVector.zero;
+
+        spine.velocity = TSVector.zero;
+        head.velocity = TSVector.zero;
+        pelvis.velocity = TSVector.zero;
+
+
+        head.AddForce(TSVector.up * 300);
+        spine.AddForce(TSVector.up * 300);
+        pelvis.AddForce(TSVector.up * 300);
+
+        leftLeg.AddForce(TSVector.down * 300);
+        rightLeg.AddForce(TSVector.down * 300);
+
+        leftFoot.AddForce(TSVector.down * 150);
+        rightFoot.AddForce(TSVector.down * 150);
+
+        Debug.Log(spine.angularVelocity);
+        Debug.Log(head.angularVelocity);
+        Debug.Log(pelvis.angularVelocity);
+
+        JitterPhysicsTools.AlignToVector(spine, spine.tsTransform.forward, direction.normalized, 0.001f, 20.0f);
+        JitterPhysicsTools.AlignToVector(head, head.tsTransform.forward, direction.normalized, 0.001f, 20.0f);
+        JitterPhysicsTools.AlignToVector(pelvis, pelvis.tsTransform.forward, direction.normalized, 0.001f, 20.0f);
     }
 
 }
