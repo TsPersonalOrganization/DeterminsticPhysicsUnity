@@ -13,6 +13,12 @@ namespace TrueSync {
 		
         public enum InterpolateMode { None, Interpolate, Extrapolate };
 
+        [SerializeField]
+        /// <summary>
+        /// The max angular velocity.
+        /// </summary>
+        private FP MaxAngularVelocity;
+
         [FormerlySerializedAs("mass")]
         [SerializeField]
         private FP _mass = 1;
@@ -321,16 +327,34 @@ namespace TrueSync {
             }
         }
 
+        /// <summary>
+        /// 缓存上一次的velocity
+        /// </summary>
+        private TSVector previousAngularVelocity = TSVector.zero;
+
         /**
         *  @brief AngularVelocity of the body. 
         **/
         public TSVector angularVelocity {
             get {
+                
                 return tsCollider.Body.TSAngularVelocity;
             }
 
             set {
-                tsCollider.Body.TSAngularVelocity = value;
+//                tsCollider.Body.TSAngularVelocity = value;
+//                return;
+
+                //如果传入的velocity的值大于设定的值，则将设置为上一次设置的值。
+                if(value.magnitude > MaxAngularVelocity)
+                {
+                    tsCollider.Body.TSAngularVelocity = previousAngularVelocity;
+                }else
+                {//否则将传入的值设置上
+                    tsCollider.Body.TSAngularVelocity = value;
+                }
+                //缓存设置的值，为下次准备。
+                previousAngularVelocity = tsCollider.Body.TSAngularVelocity;
             }
         }
 
